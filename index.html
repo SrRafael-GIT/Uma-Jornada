@@ -15,16 +15,17 @@
             background-color: #fff5f7;
             text-align: center;
             color: #333;
-            overflow: hidden; /* Garante que nada saia da tela */
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
         #container-geral {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-            max-width: 500px;
-            width: 90%;
+            max-width: 450px;
+            width: 85%;
             min-height: 400px;
             display: flex;
             flex-direction: column;
@@ -34,33 +35,32 @@
             z-index: 10;
         }
 
-        h1 { color: #d63384; font-size: 22px; line-height: 1.4; margin-bottom: 30px; }
-        .titulo-capa { color: #8a2e5d; font-size: 28px; font-weight: bold; font-style: italic; animation: fadeIn 2s; }
+        h1 { color: #d63384; font-size: 20px; line-height: 1.4; margin-bottom: 25px; }
+        .titulo-capa { color: #8a2e5d; font-size: 24px; font-weight: bold; font-style: italic; animation: fadeIn 2s; }
         
         .poesia {
             font-style: italic;
-            line-height: 1.7;
-            font-size: 17px;
+            line-height: 1.6;
+            font-size: 16px;
             color: #444;
             animation: fadeIn 1s ease-in-out;
         }
 
         .autor-citacao {
             display: block;
-            margin-top: 15px;
-            font-size: 14px;
+            margin-top: 12px;
+            font-size: 13px;
             color: #995c7a;
             font-weight: bold;
-            font-style: normal;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .final-msg {
             font-weight: bold;
-            font-size: 22px;
+            font-size: 20px;
             color: #d63384;
-            margin-top: 25px;
+            margin-top: 20px;
             animation: apareceFinal 1.5s ease-out;
         }
 
@@ -68,59 +68,70 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             margin-top: 20px;
             min-height: 60px;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 16px;
+            padding: 12px 25px;
+            font-size: 15px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: 0.2s;
         }
 
-        #btnSim { 
-            background-color: #ff69b4; 
-            color: white; 
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
-        }
-
-        #btnNao { 
-            background-color: #f0f0f0; 
-            color: #888; 
-            position: relative; /* Inicia ao lado do Sim */
-        }
+        #btnSim { background-color: #ff69b4; color: white; box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4); }
+        #btnNao { background-color: #f0f0f0; color: #888; position: relative; }
 
         .seta-proximo {
-            margin-top: 30px;
+            margin-top: 25px;
             cursor: pointer;
-            font-size: 35px;
+            font-size: 30px;
             color: #ff69b4;
             background: none;
             border: none;
             animation: bounce 2s infinite ease-in-out;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+        /* Estilo do Musico (Lagarto) no canto */
+        #container-musico {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
         }
 
+        .frase-musico {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+            text-align: right;
+            max-width: 100px;
+        }
+
+        #imagem-violao {
+            width: 120px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Imagem Final (Linda) */
+        .final-img {
+            max-width: 200px;
+            border-radius: 20px;
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes apareceFinal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .final-img {
-            max-width: 250px;
-            border-radius: 20px;
-            margin-top: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            animation: fadeIn 1.5s ease-in-out;
-        }
 
         .escondido { display: none !important; }
     </style>
@@ -187,31 +198,23 @@
         </div>
     </div>
 
+    <div id="container-musico" class="escondido">
+        <p class="frase-musico">Não ligue pra mim, sou só o músico. 🦎🎶</p>
+        <img id="imagem-violao" src="musico.png">
+    </div>
+
     <script>
         function foge(botao) {
             botao.style.position = "fixed";
-            
-            // Pega as dimensões da tela e do botão
-            const larguraTela = window.innerWidth;
-            const alturaTela = window.innerHeight;
-            const larguraBotao = botao.offsetWidth;
-            const alturaBotao = botao.offsetHeight;
-
-            // Define limites para que o botão nunca saia da borda (margem de 20px)
-            const maxX = larguraTela - larguraBotao - 20;
-            const maxY = alturaTela - alturaBotao - 20;
-
+            const maxX = window.innerWidth - botao.offsetWidth - 20;
+            const maxY = window.innerHeight - botao.offsetHeight - 20;
             let novaX = Math.max(20, Math.random() * maxX);
             let novaY = Math.max(20, Math.random() * maxY);
 
-            // Pega a posição do botão Sim para evitar sobreposição
-            const btnSim = document.getElementById('btnSim').getBoundingClientRect();
-            
-            // Se a posição sorteada for muito perto do botão Sim, tenta de novo uma vez
-            // (Simples verificação de proximidade)
-            if (Math.abs(novaX - btnSim.left) < 150 && Math.abs(novaY - btnSim.top) < 100) {
-                novaX = larguraTela - larguraBotao - 50; // Joga para o outro lado
-                novaY = 50;
+            const rect = document.getElementById('container-geral').getBoundingClientRect();
+            if (novaX > rect.left - 50 && novaX < rect.right + 50 && novaY > rect.top - 50 && novaY < rect.bottom + 50) {
+                novaX = 20;
+                novaY = 20;
             }
 
             botao.style.left = novaX + "px";
@@ -220,13 +223,14 @@
 
         function proximaEtapa(num) {
             if (num === 1) {
-                document.getElementById("musicaFundo").play();
-                const btnNao = document.getElementById("btnNao");
-                if (btnNao) btnNao.style.display = "none";
+                // Toca a música e mostra o músico EXATAMENTE na capa
+                document.getElementById("musicaFundo").play().catch(e => console.log("Erro som:", e));
+                document.getElementById("btnNao").classList.add("escondido");
+                document.getElementById("container-musico").classList.remove("escondido");
             }
 
             for (let i = 0; i <= 5; i++) {
-                const el = document.getElementById("etapa" + i);
+                let el = document.getElementById("etapa" + i);
                 if (el) el.classList.add("escondido");
             }
 
